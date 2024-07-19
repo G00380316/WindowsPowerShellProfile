@@ -60,13 +60,13 @@ function Test-CommandExists {
 
 # Editor Configuration
 $EDITOR = if (Test-CommandExists nvim) { 'nvim' }
-          elseif (Test-CommandExists pvim) { 'pvim' }
-          elseif (Test-CommandExists vim) { 'vim' }
-          elseif (Test-CommandExists vi) { 'vi' }
-          elseif (Test-CommandExists code) { 'code' }
-          elseif (Test-CommandExists notepad++) { 'notepad++' }
-          elseif (Test-CommandExists sublime_text) { 'sublime_text' }
-          else { 'notepad' }
+        elseif (Test-CommandExists pvim) { 'pvim' }
+        elseif (Test-CommandExists vim) { 'vim' }
+        elseif (Test-CommandExists vi) { 'vi' }
+        elseif (Test-CommandExists code) { 'code' }
+        elseif (Test-CommandExists notepad++) { 'notepad++' }
+        elseif (Test-CommandExists sublime_text) { 'sublime_text' }
+        else { 'notepad' }
 Set-Alias -Name vim -Value $EDITOR
 
 function Edit-Profile {
@@ -197,38 +197,38 @@ function runs {
             ruby $scriptPath
         }
         ".json" {
-         $option = Read-Host "Enter letter based on what kind of Server you want to start d (Dev) or s (Prod) or b (Build) or c (For entering a custom command)"
-             if ($option -eq "d" -or $option -eq "D") {
-                 npm run dev
-             } elseif ($option -eq "s" -or $option -eq "S") {
-                 npm run start
-             } elseif ($option -eq "b" -or $option -eq "B") {
-                 npm run build -Wait
-                 $option = Read-Host "Do you want to run Production straight away y(Yes) or n(No)"
-                 if($option -eq "y"){
-                  npm run start
-                 }
-                 else{}
-             } elseif ($option -eq "c" -or $option -eq "C") {
-                 $custom = Read-Host "Enter custom command (e.g npm run [Fill])"
-                 npm run $custom 
-             } else {
-                 Write-Error "Not a valid option: $option"
-             }
-         }
+        $option = Read-Host "Enter letter based on what kind of Server you want to start d (Dev) or s (Prod) or b (Build) or c (For entering a custom command)"
+            if ($option -eq "d" -or $option -eq "D") {
+                npm run dev
+            } elseif ($option -eq "s" -or $option -eq "S") {
+                npm run start
+            } elseif ($option -eq "b" -or $option -eq "B") {
+                npm run build -Wait
+                $option = Read-Host "Do you want to run Production straight away y(Yes) or n(No)"
+                if($option -eq "y"){
+                npm run start
+                }
+                else{}
+            } elseif ($option -eq "c" -or $option -eq "C") {
+                $custom = Read-Host "Enter custom command (e.g npm run [Fill])"
+                npm run $custom
+            } else {
+                Write-Error "Not a valid option: $option"
+            }
+        }
         ".js" {
             node $scriptPath
         }
         ".ts" {
-             if (Test-Path "$dir/tsconfig.json") {
-                 tsc
-                 $jsFile = [System.IO.Path]::ChangeExtension($scriptPath, ".js")
-                 node $jsFile
-             } else {
-                 tsc $scriptPath
-                 $jsFile = [System.IO.Path]::ChangeExtension($scriptPath, ".js")
-                 node $jsFile
-             }
+            if (Test-Path "$dir/tsconfig.json") {
+                tsc
+                $jsFile = [System.IO.Path]::ChangeExtension($scriptPath, ".js")
+                node $jsFile
+            } else {
+                tsc $scriptPath
+                $jsFile = [System.IO.Path]::ChangeExtension($scriptPath, ".js")
+                node $jsFile
+            }
         }
         ".java" {
             javac $scriptPath
@@ -335,7 +335,7 @@ function dstart {
     docker start $containerName
 }
 
-# Stop Docker Container 
+# Stop Docker Container
 function dstop {
     param([string]$containerName)
     docker stop $containerName
@@ -382,21 +382,21 @@ function gpull {
 # Github CLI Shortcuts
 
 function gas {
-   gh auth status
+    gh auth status
 }
 
 function grc {
-         $Option = Read-Host "Do you want the Repository to be Public? y(Yes) or n(NO)"
-         if($Option -eq "y" -or $Option -eq "Y"){ 
-            $name = Read-Host "Enter the name of the Repository"
-            gh repo create $name --public --source=. --remote=origin
-            git push --set-upstream origin main
-         }            
-         else{
-            $name = Read-Host "Enter the name of the Repository"
-            gh repo create $name --private --source=. --remote=origin
-            git push --set-upstream origin main
-         }
+        $Option = Read-Host "Do you want the Repository to be Public? y(Yes) or n(NO)"
+        if($Option -eq "y" -or $Option -eq "Y"){
+        $name = Read-Host "Enter the name of the Repository"
+        gh repo create $name --public --source=. --remote=origin
+        git push --set-upstream origin main
+        }
+        else{
+        $name = Read-Host "Enter the name of the Repository"
+        gh repo create $name --private --source=. --remote=origin
+        git push --set-upstream origin main
+        }
 }
 
 # Enhanced PowerShell Experience
@@ -411,11 +411,12 @@ function Get-Theme {
     if (Test-Path -Path $PROFILE.CurrentUserAllHosts -PathType leaf) {
         $existingTheme = Select-String -Raw -Path $PROFILE.CurrentUserAllHosts -Pattern "oh-my-posh init pwsh --config"
         if ($null -ne $existingTheme) {
-           Invoke-Expression $existingTheme
+            Invoke-Expression $existingTheme
             return
         }
     } else {
-         oh-my-posh init pwsh --config 'C://Users/balli/OneDrive/Documents/Useful bat files/WindowsTerminal/jandedobbeleer.omp.json' | Invoke-Expression
+        # This my own personal one so you can remove it otherwise one from the Internet should run
+        oh-my-posh init pwsh --config 'C://Users/balli/OneDrive/Documents/Useful bat files/WindowsTerminal/jandedobbeleer.omp.json' | Invoke-Expression
         #oh-my-posh init pwsh --config https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/cobalt2.omp.json | Invoke-Expression
     }
 }
