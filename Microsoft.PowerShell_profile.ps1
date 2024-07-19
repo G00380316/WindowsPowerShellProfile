@@ -385,6 +385,13 @@ function gas {
     gh auth status
 }
 
+function gcr {
+    param($repo)
+    gh repo clone $repo
+}
+
+Set-Alias -Name clone -Value gcr
+
 function grc {
         $Option = Read-Host "Do you want the Repository to be Public? y(Yes) or n(NO)"
         if($Option -eq "y" -or $Option -eq "Y"){
@@ -398,6 +405,14 @@ function grc {
         git push --set-upstream origin main
         }
 }
+
+Set-Alias -Name cremote -Value grc
+
+function grl {
+   gh repo list 
+}
+
+Set-Alias -Name repos -Value grl
 
 # Enhanced PowerShell Experience
 Set-PSReadLineOption -Colors @{
