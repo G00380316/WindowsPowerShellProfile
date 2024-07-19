@@ -173,35 +173,6 @@ function k9 { Stop-Process -Name $args[0] }
 function la { Get-ChildItem -Path . -Force | Format-Table -AutoSize }
 function ll { Get-ChildItem -Path . -Force -Hidden | Format-Table -AutoSize }
 
-# Git Shortcuts
-function gs { git status }
-function ga { git add . }
-function gc { param($m) git commit -m "$m" }
-function gp { git push }
-function gb {
-    git branch
-}
-
-function gcl { git clone "$args" }
-function gcom {
-    git add .
-    git commit -m "$args"
-}
-function lazyg {
-    git add .
-    git commit -m "$args"
-    git push
-}
-function gpull {
-    $repos = Get-ChildItem -Directory
-    foreach ($repo in $repos) {
-        Write-Host "Pulling $repo"
-        Set-Location $repo.FullName
-        git pull
-        Set-Location ..
-    }
-}
-
 # Devlopers
 function runs {
     param([string]$scriptPath)
@@ -379,6 +350,55 @@ function flushdns {
     Write-Host "DNS has been flushed"
 }
 
+# Git Shortcuts
+function gs { git status }
+function ga { git add . }
+function gc { param($m) git commit -m "$m" }
+function gp { git push }
+function gb {
+    git branch
+}
+
+function gcl { git clone "$args" }
+function gcom {
+    git add .
+    git commit -m "$args"
+}
+function lazyg {
+    git add .
+    git commit -m "$args"
+    git push
+}
+function gpull {
+    $repos = Get-ChildItem -Directory
+    foreach ($repo in $repos) {
+        Write-Host "Pulling $repo"
+        Set-Location $repo.FullName
+        git pull
+        Set-Location ..
+    }
+}
+
+# Github CLI Shortcuts
+
+function gas {
+   gh auth status
+}
+
+function grc {
+         $Option = Read-Host "Do you want the Repository to be Public? y(Yes) or n(NO)"
+         if($Option -eq "y" -or $Option -eq "Y"){ 
+            $name = Read-Host "Enter the name of the Repository"
+            gh repo create $name --public --source=. --remote=origin
+            git push --set-upstream origin main
+         }            
+         else{
+            $name = Read-Host "Enter the name of the Repository"
+            gh repo create $name --private --source=. --remote=origin
+            git push --set-upstream origin main
+         }
+}
+
 # Enhanced PowerShell Experience
 Set-PSReadLineOption -Colors @{
     Command = 'Yellow'
@@ -395,11 +415,30 @@ function Get-Theme {
             return
         }
     } else {
-        oh-my-posh init pwsh --config https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/cobalt2.omp.json | Invoke-Expression
+         oh-my-posh init pwsh --config 'C://Users/balli/OneDrive/Documents/Useful bat files/WindowsTerminal/jandedobbeleer.omp.json' | Invoke-Expression
+        #oh-my-posh init pwsh --config https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/cobalt2.omp.json | Invoke-Expression
     }
 }
 Get-Theme
 
+# Check if the GitHub CLI is installed
+if (Get-Command gh -ErrorAction SilentlyContinue) {
+} elseif (Get-Command -Name winget -ErrorAction SilentlyContinue) {
+        try {
+            Write-Host "GitHub CLI command not found. Attempting to install via Winget..."
+            # Install GitHub CLI using Winget
+            winget install --id GitHub.cli -e --accept-package-agreements --accept-source-agreements
+            Write-Host "GitHub CLI installed successfully. Initializing..."
+            # Authenticate with GitHub
+            gh auth login
+        } catch {
+            Write-Error "Failed to install GitHub CLI. Error: $_"
+        }
+    } else {
+        Write-Error "Winget is not available on this system. Please install Winget and try again."
+    }
+
+# Zoxide check
 if (Get-Command zoxide -ErrorAction SilentlyContinue) {
     Invoke-Expression (& { (zoxide init --cmd cd powershell | Out-String) })
 } else {
@@ -419,6 +458,7 @@ function Show-Help {
 PowerShell Profile Help
 =======================
 
+runs - Used to run files ("Type in the file path with name and type after example 'run C://User/Documents/HelloWorld.java', Note: if your in the dir of the file you want to run then just enter the command like this 'run HelloWorld')
 Update-PowerShell - Checks for the latest PowerShell release and updates if a new version is available.
 Edit-Profile - Opens the current user's profile for editing using the configured editor.
 touch <file> - Creates a new empty file.
@@ -449,6 +489,8 @@ gs - Shortcut for 'git status'.
 ga - Shortcut for 'git add .'.
 gc <message> - Shortcut for 'git commit -m'.
 gp - Shortcut for 'git push'.
+gas - Gets Github authentication status
+grc - Creates a new Github Repostiory
 gcom <message> - Adds all changes and commits with the specified message.
 lazyg <message> - Adds all changes, commits with the specified message, and pushes to the remote repository.
 sysinfo - Displays detailed system information.

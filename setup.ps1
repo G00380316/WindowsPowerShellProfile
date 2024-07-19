@@ -36,8 +36,7 @@ if (!(Test-Path -Path $PROFILE -PathType Leaf)) {
         if (!(Test-Path -Path $profilePath)) {
             New-Item -Path $profilePath -ItemType "directory"
         }
-
-        Invoke-RestMethod https://github.com/ChrisTitusTech/powershell-profile/raw/main/Microsoft.PowerShell_profile.ps1 -OutFile $PROFILE
+        Invoke-RestMethod https://raw.githubusercontent.com/G00380316/WindowsPowerShellProfile/97fddbdd94459bfea03d26e4d7d58d9abdd8c48d/Microsoft.PowerShell_profile.ps1 -OutFile $PROFILE
         Write-Host "The profile @ [$PROFILE] has been created."
         Write-Host "If you want to make any personal changes or customizations, please do so at [$profilePath\Profile.ps1] as there is an updater in the installed profile which uses the hash to update the profile and will lead to loss of changes"
     }
@@ -48,7 +47,7 @@ if (!(Test-Path -Path $PROFILE -PathType Leaf)) {
 else {
     try {
         Get-Item -Path $PROFILE | Move-Item -Destination "oldprofile.ps1" -Force
-        Invoke-RestMethod https://github.com/ChrisTitusTech/powershell-profile/raw/main/Microsoft.PowerShell_profile.ps1 -OutFile $PROFILE
+        Invoke-RestMethod https://raw.githubusercontent.com/G00380316/WindowsPowerShellProfile/97fddbdd94459bfea03d26e4d7d58d9abdd8c48d/Microsoft.PowerShell_profile.ps1 -OutFile $PROFILE
         Write-Host "The profile @ [$PROFILE] has been created and old profile removed."
         Write-Host "Please back up any persistent components of your old profile to [$HOME\Documents\PowerShell\Profile.ps1] as there is an updater in the installed profile which uses the hash to update the profile and will lead to loss of changes"
     }
@@ -123,4 +122,14 @@ try {
 }
 catch {
     Write-Error "Failed to install zoxide. Error: $_"
+}
+
+try {
+   # Install GitHub CLI using Winget
+   winget install --id GitHub.cli -e --accept-package-agreements --accept-source-agreements
+   Write-Host "GitHub CLI installed successfully. Initializing..."
+   # Authenticate with GitHub
+   gh auth login
+} catch {
+   Write-Error "Failed to install GitHub CLI. Error: $_"
 }
