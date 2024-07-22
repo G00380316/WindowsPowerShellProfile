@@ -190,6 +190,50 @@ function runs {
 
     # Determine the appropriate action based on file extension
     switch ($extension) {
+        ".xml" {
+            $option = Read-Host "Enter number based on the lifecycle you want to start `n1. clean`n2. validate`n3. compile`n4. test`n5. package`n6. verify`n7. install`n8. site`n9. deploy`n10. custom`n`nEnter option"
+            switch ($option) {
+               "1" {
+                  mvn clean
+                  $option = Read-Host "Do you want to run the Package lifecycle y(Yes) or n(No)"
+                  if($option -eq "y"){
+                     mvn package
+                  }
+                  else{}
+               }
+               "2" {
+                  mvn validate
+               }
+               "3" {
+                  mvn compile                                                                             
+               }
+               "4" {
+                  mvn test
+               }
+               "5" {
+                  mvn package
+               }
+               "6" {
+                  mvn verify
+               }
+               "7" {
+                  mvn install
+               }
+               "8" {
+                  mvn site
+               }
+               "9" {
+                  mvn deploy
+               }
+               "10" {
+                  $custom = Read-Host "Enter custom command (e.g mvn [Fill])"
+                  mvn $custom
+               }
+               default { 
+                  Write-Error "Not a valid option: $option"
+               }
+            }
+        }
         ".py" {
             python $scriptPath
         }
