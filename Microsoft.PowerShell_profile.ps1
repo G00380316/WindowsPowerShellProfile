@@ -11,6 +11,15 @@ if (Test-Path($ChocolateyProfile)) {
     Import-Module "$ChocolateyProfile"
 }
 
+
+function explorer {
+    param (
+        [string]$Path = "."
+    )
+    Invoke-Expression "explorer.exe $Path"
+}
+Set-Alias -Name open -Value explorer 
+
 # Functions
 
 # Update PowerShell
